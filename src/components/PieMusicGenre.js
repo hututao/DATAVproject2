@@ -1,0 +1,193 @@
+import React, { useEffect, useRef } from "react";
+import * as echarts from 'echarts/core';
+import {
+    DatasetComponent,
+    TooltipComponent,
+    LegendComponent,
+    TitleComponent
+} from 'echarts/components';
+import { PieChart } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+import ReactEChartsCore from "echarts-for-react/lib/core";
+
+echarts.use([
+    DatasetComponent,
+    TooltipComponent,
+    LegendComponent,
+    PieChart,
+    CanvasRenderer,
+    TitleComponent
+]);
+
+const transMusicGenre = (data) => {
+    const result = {};
+
+    data.forEach((item) => {
+        const subplan = item.spotify_subscription_plan;
+        const willingness = item.premium_sub_willingness;
+        const key = `${subplan}-${willingness}`;
+        const musicgenre = item.fav_music_genre;
+
+        if (!result[key]) {
+            result[key] = {
+                'Melody': 0,
+                'Rap': 0,
+                'Pop': 0,
+                'Classical & melody, dance': 0,
+                'Rock': 0,
+                'Old songs': 0,
+                'All': 0,
+                'Electronic/Dance': 0,
+                'Kpop': 0,
+                'trending songs random': 0,
+                'classical': 0,
+            };
+        }
+
+        if (musicgenre) {
+            result[key][musicgenre] += 1;
+        }
+    });
+
+    const convertToEChartsFormat = (data) => {
+        return Object.keys(data).map(musicgenre => ({
+            value: data[musicgenre],
+            name: `${musicgenre}`
+        }));
+    };
+
+    for (const key in result) {
+        result[key] = convertToEChartsFormat(result[key]);
+    }
+
+    return result;
+};
+
+const PieMusicGenre = ({ data, highlightedCategory }) => {
+    const chartRef = useRef(null);
+
+    const getOption = () => ({
+        color: [
+            '#FF6347', '#FF4500', '#FFD700', '#32CD32', '#00FA9A',
+            '#1E90FF', '#8A2BE2', '#FF69B4', '#FF1493', '#FF8C00',
+            '#9370DB', '#ADFF2F', '#20B2AA', '#87CEEB', '#DAA520',
+            '#FF7F50', '#7FFF00', '#FF00FF', '#FFB6C1', '#C71585',
+            '#F4A460',
+        ],
+        legend: {},
+        tooltip: {},
+        title: [
+            {
+                text: 'Free (ad-supported) - Yes',
+                left: '18%',
+                top: '45%',
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: 'normal'
+                }
+            },
+            {
+                text: 'Free (ad-supported) - No',
+                left: '63%',
+                top: '45%',
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: 'normal'
+                }
+            },
+            {
+                text: 'Premium (paid subscription) - Yes',
+                left: '15%',
+                top: '85%',
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: 'normal'
+                }
+            },
+            {
+                text: 'Premium (paid subscription) - No',
+                left: '60%',
+                top: '85%',
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: 'normal'
+                }
+            },
+        ],
+        series: [
+            {
+                type: 'pie',
+                radius: '20%',
+                center: ['25%', '30%'],
+                data: data["Free (ad-supported)-Yes"],
+                label: { show: false },
+                labelLine: { show: false }
+            },
+            {
+                type: 'pie',
+                radius: '20%',
+                center: ['70%', '30%'],
+                data: data["Free (ad-supported)-No"],
+                label: { show: false },
+                labelLine: { show: false }
+            },
+            {
+                type: 'pie',
+                radius: '20%',
+                center: ['25%', '70%'],
+                data: data["Premium (paid subscription)-Yes"],
+                label: { show: false },
+                labelLine: { show: false }
+            },
+            {
+                type: 'pie',
+                radius: '20%',
+                center: ['70%', '70%'],
+                data: data["Premium (paid subscription)-No"],
+                label: { show: false },
+                labelLine: { show: false }
+            },
+        ]
+    });
+
+    useEffect(() => {
+        const chart = chartRef.current?.getEchartsInstance();
+
+        if (chart && highlightedCategory) {
+            const dataIndexMap = {
+                'Free (ad-supported)-Yes': 0,
+                'Free (ad-supported)-No': 1,
+                'Premium (paid subscription)-Yes': 2,
+                'Premium (paid subscription)-No': 3
+            };
+
+            for (const [key, dataIndex] of Object.entries(dataIndexMap)) {
+                const seriesData = data[key];
+                const dataIndexToHighlight = seriesData.findIndex(item => item.name === highlightedCategory);
+                if (dataIndexToHighlight !== -1) {
+                    chart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: dataIndex,
+                        dataIndex: dataIndexToHighlight
+                    });
+                }
+            }
+        } else {
+            chart?.dispatchAction({
+                type: 'downplay'
+            });
+        }
+    }, [highlightedCategory, data]);
+
+    return (
+        <ReactEChartsCore 
+            echarts={echarts} 
+            option={getOption()} 
+            style={{ height: '50vh', width: '59vw' }}
+            ref={chartRef}
+        />
+    );
+};
+
+export { PieMusicGenre, transMusicGenre };
+

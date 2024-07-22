@@ -1,0 +1,127 @@
+.main {
+  min-height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  background-color: rgb(255,255,255,0);
+}
+
+.title{
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:40px;
+  left:100px;
+  width:250px;
+  height:150px;
+  position:fixed;
+}
+
+.console{
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:250px;
+  bottom:300px;
+  left:100px;
+  width:250px;
+  position:fixed;
+}
+
+.description {
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:680px;
+  left:100px;
+  width:250px;
+  position:fixed;
+}
+
+
+.firstGraph {
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(255,255,255,1);
+
+  top:30px;
+  left:400px;
+  right:120px;
+}
+
+.secondGraph {
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:350px;
+  left:410px;
+  right:150px;
+}
+
+.thirdGraph {
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:885px;
+  left:410px;
+  right:150px;
+}
+
+.detail{
+  border-width:0px;
+  border-radius: 10px;
+  position:absolute;
+  overflow:hidden;
+
+  background-color:rgba(255,255,255,1);
+  padding:10px;
+  box-shadow:0px 5px 15px 0px rgba(0,0,0,0.3);
+
+  top:470px;
+  left:370px;
+  width:750px;
+  height:400px;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
