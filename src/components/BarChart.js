@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import ReactECharts from 'echarts-for-react';
 import { Paper, Typography } from '@mui/material';
-import data from '../data/dataset.json'; 
+import data from '../data/dataset.json';
 
 const processData = (category) => {
   const categories = ['free-yes', 'free-no', 'prem-yes', 'prem-no'];
@@ -44,7 +45,14 @@ const BarChart = ({ category, onHover }) => {
       axisPointer: { type: 'shadow' }
     },
     legend: { data: ['free-yes', 'free-no', 'prem-yes', 'prem-no'] },
-    xAxis: [{ type: 'category', data: xAxisData }],
+    xAxis: [{
+      type: 'category',
+      data: xAxisData,
+      axisLabel: {
+        rotate: 45,  // 旋转标签
+        fontSize: 8,  // 调整字体大小
+      }
+    }],
     yAxis: [{ type: 'value' }],
     series: seriesData.map((series) => ({
       name: series.name,
@@ -55,12 +63,12 @@ const BarChart = ({ category, onHover }) => {
   });
 
   return (
-    <Paper elevation={3} sx={{ padding: 'px', height: '30vh', width: '66vw' }}>
+    <Paper elevation={3} sx={{ padding: 2, height: '40vh', width: '75vw' }}>
       <Typography variant="h6">Bar Chart</Typography>
       <ReactECharts
         ref={chartRef}
-        option={getOption()} 
-        style={{ height: '100%', width: '100%' }}
+        option={getOption()}
+        style={{ height: '90%', width: '100%' }}
         onEvents={{
           'mouseover': (params) => onHover(params),
           'mouseout': () => onHover(null)
@@ -70,5 +78,9 @@ const BarChart = ({ category, onHover }) => {
   );
 };
 
-export default BarChart;
+BarChart.propTypes = {
+  category: PropTypes.string.isRequired,
+  onHover: PropTypes.func.isRequired,
+};
 
+export default BarChart;
